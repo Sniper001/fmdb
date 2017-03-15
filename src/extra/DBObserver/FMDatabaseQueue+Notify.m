@@ -33,8 +33,6 @@ void update_callback(void *user_data, int operation_type,
  */
 - (void)registerObserver:(_Nonnull NSString *)tableName
                   notify:(_Nonnull NSString *)notifyIdentify {
-
-    //注册对数据库表的变更的监听,当数据库表发生数据插入/更新/删除操作时会触发回调
     pthread_mutex_lock(&pLock);
     if (![[notifyDic allKeys] containsObject:tableName]) {
         [notifyDic setObject:notifyIdentify forKey:tableName];
