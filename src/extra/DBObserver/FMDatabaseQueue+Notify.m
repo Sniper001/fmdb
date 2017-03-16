@@ -23,6 +23,7 @@ void update_callback(void *user_data, int operation_type,
         NSString *notifyStr = [notifyDic objectForKey:tableStr];
         [[NSNotificationCenter defaultCenter] postNotificationName:notifyStr
                                                             object:nil];
+
     }
     pthread_mutex_unlock(&pLock);
 }
@@ -31,8 +32,8 @@ void update_callback(void *user_data, int operation_type,
  * register db change observer for table: tableName
  * SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE
  */
-- (void)registerObserver:(_Nonnull NSString *)tableName
-                  notify:(_Nonnull NSString *)notifyIdentify {
+- (void)registerObserver:( NSString * _Nonnull )tableName
+                  notify:( NSString * _Nonnull )notifyIdentify {
     pthread_mutex_lock(&pLock);
     if (![[notifyDic allKeys] containsObject:tableName]) {
         [notifyDic setObject:notifyIdentify forKey:tableName];
@@ -48,7 +49,7 @@ void update_callback(void *user_data, int operation_type,
 /**
  * unregister db change observer for table: tableName
  */
-- (void)unRegisterObserver:(_Nonnull NSString *)tableName {
+- (void)unRegisterObserver:(NSString * _Nonnull )tableName {
     pthread_mutex_lock(&pLock);
     [notifyDic removeObjectForKey:tableName];
     pthread_mutex_unlock(&pLock);

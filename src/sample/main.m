@@ -6,6 +6,7 @@
 #import <Foundation/Foundation.h>
 #import "FMDB.h"
 #import <sqlite3.h>
+#import "FMDatabaseQueue+Notify.h"
 
 #define FMDBQuickCheck(SomeBool) { if (!(SomeBool)) { NSLog(@"Failure on line %d", __LINE__); abort(); } }
 
@@ -1503,6 +1504,7 @@ void FMDBReportABugFunction() {
     [fileManager removeItemAtPath:dbPath error:nil];
     
     FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:dbPath];
+    [queue registerObserver:@"test" notify:@"testNotify"];
     
     [queue inDatabase:^(FMDatabase *db) {
         
@@ -1522,7 +1524,7 @@ void FMDBReportABugFunction() {
         [rs close];
         
     }];
-    
+    [queue unRegisterObserver:@"test"];
     
     [queue close];
     

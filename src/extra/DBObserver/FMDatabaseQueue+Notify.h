@@ -7,8 +7,8 @@
 
 @interface FMDatabaseQueue (Notify)
 
-- (void)registerObserver:(_Nonnull NSString *)tableName
-                  notify:(_Nonnull NSString *)notifyIdentify;
+- (void)registerObserver:(NSString * _Nonnull )tableName
+                  notify:(NSString * _Nonnull )notifyIdentify;
 
-- (void)unRegisterObserver:(_Nonnull NSString *)tableName;
+- (void)unRegisterObserver:(NSString * _Nonnull )tableName;
 @end
