@@ -18,12 +18,12 @@ void update_callback(void *user_data, int operation_type,
         char const *database, char const *table, sqlite3_int64 rowid) {
     NSString *tableStr = [NSString stringWithCString:table
                                             encoding:NSUTF8StringEncoding];
+    NSString *observe_key = [NSString stringWithFormat:@"%@/%@", _path, tableStr];
     pthread_mutex_lock(&pLock);
-    if ([[notifyDic allKeys] containsObject:tableStr]) {
-        NSString *notifyStr = [notifyDic objectForKey:tableStr];
+    if ([[notifyDic allKeys] containsObject:observe_key]) {
+        NSString *notifyStr = [notifyDic objectForKey:observe_key];
         [[NSNotificationCenter defaultCenter] postNotificationName:notifyStr
                                                             object:nil];
-
     }
     pthread_mutex_unlock(&pLock);
 }
@@ -34,9 +34,10 @@ void update_callback(void *user_data, int operation_type,
  */
 - (void)registerObserver:( NSString * _Nonnull )tableName
                   notify:( NSString * _Nonnull )notifyIdentify {
+    NSString *observe_key = [NSString stringWithFormat:@"%@/%@", _path, tableName];
     pthread_mutex_lock(&pLock);
-    if (![[notifyDic allKeys] containsObject:tableName]) {
-        [notifyDic setObject:notifyIdentify forKey:tableName];
+    if (![[notifyDic allKeys] containsObject:observe_key]) {
+        [notifyDic setObject:notifyIdentify forKey:observe_key];
     }
     pthread_mutex_unlock(&pLock);
 
@@ -50,8 +51,9 @@ void update_callback(void *user_data, int operation_type,
  * unregister db change observer for table: tableName
  */
 - (void)unRegisterObserver:(NSString * _Nonnull )tableName {
+    NSString *observe_key = [NSString stringWithFormat:@"%@/%@", _path, tableName];
     pthread_mutex_lock(&pLock);
-    [notifyDic removeObjectForKey:tableName];
+    [notifyDic removeObjectForKey:observe_key];
     pthread_mutex_unlock(&pLock);
 }
 
